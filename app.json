@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "PoolPal",
+    "slug": "poolpal",
+    "sdkVersion": "30.0.0",
+    "orientation": "portrait",
+    "version": "0.1.0",
+    "description": ""
+  },
+  "ios": {
+    "bundleIdentifier": "com.wudavid.crna_poolpal",
+    "buildNumber": "0.1"
+  }
+}
