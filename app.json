@@ -5,7 +5,8 @@
     "sdkVersion": "30.0.0",
     "orientation": "portrait",
     "version": "0.1.0",
-    "description": ""
+    "description": "",
+    "githubUrl": "https://github.com/davidwu220/poolpal-rn"
   },
   "ios": {
     "bundleIdentifier": "com.wudavid.crna_poolpal",

@@ -12,13 +12,16 @@ import {
   LocationSearchResults,
   SearchResultsList,
   NavigationIcon,
-  LocateButton
+  LocateButton,
 } from '../components'
+
+import ContactCarousel from '../components/ContactCarousel'
 
 import MapViewDirections from 'react-native-maps-directions';
 
 const mapStateToProps = (state) => ({
   recentLocations: state.recentLocations,
+  savedContacts: state.savedContacts,
   shortcutLocations: state.recentLocations.slice(0, 3),
 })
 
@@ -204,7 +207,7 @@ class Main extends Component {
   }
 
   render() {
-    const {recentLocations, shortcutLocations} = this.props
+    const {recentLocations, shortcutLocations, savedContacts} = this.props
     const {searchResultsOpen, pickingPassengers, sourceText, destinationText, region, go, followsUserLocation, search, searchedList, predictions} = this.state
 
     return (
@@ -281,6 +284,10 @@ class Main extends Component {
               onRowPress={this.onResultPress}
             />
           </LocationSearchResults>
+          <ContactCarousel
+            contacts={savedContacts}
+            hide={!pickingPassengers}
+          />
         </SafeAreaView>
       </View>
     )
@@ -304,7 +311,7 @@ const styles = StyleSheet.create({
   debug: {
     backgroundColor: 'rgba(0,0,0,0.20)',
     top: 500,
-  }
+  },
 })
 
 export default connect(mapStateToProps)(Main);
