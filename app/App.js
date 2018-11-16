@@ -15,10 +15,10 @@ const initialState = {
     {id: '4', icon: 'recent', title: '445 1st St', subtitle: 'Sunnyvale, CA'},
   ],
   savedContacts: [
-    {id: '0', name: "User One", address: "123 Example Street.", profilePic: "", placeId: "0"},
-    {id: '1', name: "User Two", address: "123 Example Street.", profilePic: "", placeId: "1"},
-    {id: '2', name: "User Three", address: "123 Example Street.", profilePic: "", placeId: "2"},
-    {id: '3', name: "User Four", address: "123 Example Street.", profilePic: "", placeId: "3"},
+    {id: '0', name: "User One", address: "123 Example Street.", profilePic: "", coordinate: {latitude: 34.043030, longitude: -118.481784}},
+    {id: '1', name: "User Two", address: "123 Example Street.", profilePic: "", coordinate: {latitude: 34.058443, longitude: -118.419642}},
+    {id: '2', name: "User Three", address: "123 Example Street.", profilePic: "", coordinate: {latitude: 34.043098, longitude: -118.446087}},
+    {id: '3', name: "User Four", address: "123 Example Street.", profilePic: "", coordinate: {latitude: 34.031938, longitude: -118.456669}},
   ]
 }
 

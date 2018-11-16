@@ -206,9 +206,24 @@ class Main extends Component {
     this.mapView.animateToCoordinate(this.state.posEst, 500);
   }
 
+  highlightPassenger = (index) => {
+    this.props.savedContacts.forEach((contact) => {
+      if(contact.id == index) {
+        this.mapView.fitToCoordinates([this.state.posEst, contact.coordinate], {
+          edgePadding: {
+            top: (height * 0.05),
+            right: (width * 0.1),
+            bottom: (height * 0.5),
+            left: (width * 0.1),
+          }
+        });
+      }
+    })
+  }
+
   render() {
-    const {recentLocations, shortcutLocations, savedContacts} = this.props
-    const {searchResultsOpen, pickingPassengers, sourceText, destinationText, region, go, followsUserLocation, search, searchedList, predictions} = this.state
+    const {recentLocations, shortcutLocations, savedContacts, activePin} = this.props
+    const {searchResultsOpen, pickingPassengers, sourceText, destinationText, region, go, followsUserLocation, search, searchedList, predictions, origin, waypoints, destination} = this.state
 
     return (
       <View style={styles.container}>
@@ -216,7 +231,7 @@ class Main extends Component {
           // provider={PROVIDER_GOOGLE}
           style={styles.map}
           initialRegion={region}
-          onPress={this.onMapPress}
+          // onPress={this.onMapPress}
           mapType={'mutedStandard'}
           showsUserLocation={true}
           showsCompass={true}
@@ -227,15 +242,18 @@ class Main extends Component {
           // legalLabelInsets={pickingPassengers ? {bottom: (height * 0.4)} : null}
           ref={c => this.mapView = c}
         >
-          {this.state.waypoints.map((coordinate, index) =>
+          {waypoints.map((coordinate, index) =>
             <MapView.Marker key={`coordinate_${index}`} coordinate={coordinate} />
           )}
+          {savedContacts.map(({id, coordinate}) => (
+            <MapView.Marker key={id} coordinate={coordinate} pinColor={activePin ? 'red' : 'gray'} />
+          ))}
           {go && (
             <MapViewDirections
-              origin={ this.state.origin }
-              waypoints={ (this.state.waypoints.length > 0) ? this.state.waypoints : null }
+              origin={ origin }
+              waypoints={ (waypoints.length > 0) ? waypoints : null }
               optimizeWaypoints={true}
-              destination={this.state.destination}
+              destination={destination}
               apikey={GOOGLE_MAPS_API_KEY}
               strokeWidth={3}
               onReady={(result) => {
@@ -287,6 +305,7 @@ class Main extends Component {
           <ContactCarousel
             contacts={savedContacts}
             hide={!pickingPassengers}
+            highlightPassenger={this.highlightPassenger}
           />
         </SafeAreaView>
       </View>

@@ -31,8 +31,11 @@ export default class ContactCarousel extends Component {
         renderItem={this._renderItem}
         sliderWidth={sliderWidth}
         itemWidth={280}
-        containerCustomStyle={styles.contactCarousel}
+        containerCustomStyle={ [styles.contactCarousel, this.props.hide ? {bottom: -300} : null] }
         useScrollView={true}
+        enableMomentum={true}
+        decelerationRate={0.9}
+        onBeforeSnapToItem={this.props.highlightPassenger}
       />
     )
   }
