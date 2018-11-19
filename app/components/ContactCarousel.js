@@ -5,8 +5,8 @@ import Carousel from 'react-native-snap-carousel'
 const sliderWidth = Dimensions.get('window').width;
 
 export default class ContactCarousel extends Component {
-  _renderItem({item, index}) {
-    const {name, address, profilePic, placeId} = item;
+  _renderItem = ({item, index}) => {
+    const {name, address, profilePic, coordinate} = item;
     return (
       <View
         key={index}
@@ -15,9 +15,9 @@ export default class ContactCarousel extends Component {
         <Text>{name}</Text>
         <Text>{address}</Text>
         <Button
-          onPress={() => console.log(placeId)}
+          onPress={() => this.props.onPassengerSelect(coordinate)}
           title="Pick up"
-          color="dimgray"
+          // color="dimgray"
         />
       </View>
     )

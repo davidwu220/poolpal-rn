@@ -68,15 +68,19 @@ class Main extends Component {
   componentWillMount() {
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       let { latitude, longitude, accuracy } = coords;
-      let region = getDelta(latitude, longitude, (accuracy*50) );
+      let region = getDelta(latitude, longitude, (accuracy*46));
 
       this.setState({ region });
     });
-    navigator.geolocation.watchPosition(({ coords }) => {
+    this.watchID = navigator.geolocation.watchPosition(({ coords }) => {
       this.setState({
         posEst: coords
       });
     });
+  }
+
+  componentWillUnmount(){
+    navigator.geolocation.clearWatch(this.watchID);
   }
 
   onGoButtonPress = () => {
@@ -202,14 +206,14 @@ class Main extends Component {
       pickingPassengers: false
     });
 
-    // TODO: might want to change that to animateToRegion
-    this.mapView.animateToCoordinate(this.state.posEst, 500);
+    let coordsWithDelta = getDelta(this.state.posEst.latitude, this.state.posEst.longitude, (this.state.posEst.accuracy*46))
+    this.mapView.animateToRegion(coordsWithDelta, 500);
   }
 
   highlightPassenger = (index) => {
     this.props.savedContacts.forEach((contact) => {
       if(contact.id == index) {
-        this.mapView.fitToCoordinates([this.state.posEst, contact.coordinate], {
+        this.mapView.fitToCoordinates([this.state.origin, ...this.state.waypoints, contact.coordinate, this.state.destination], {
           edgePadding: {
             top: (height * 0.05),
             right: (width * 0.1),
@@ -221,8 +225,16 @@ class Main extends Component {
     })
   }
 
+  onPassengerSelect = (coord) => {
+    this.setState(({waypoints}) => {
+      let cloneWaypoints = waypoints.slice(0);
+      cloneWaypoints.push(coord);
+      return { waypoints: cloneWaypoints };
+    });
+  }
+
   render() {
-    const {recentLocations, shortcutLocations, savedContacts, activePin} = this.props
+    const {recentLocations, shortcutLocations, savedContacts} = this.props
     const {searchResultsOpen, pickingPassengers, sourceText, destinationText, region, go, followsUserLocation, search, searchedList, predictions, origin, waypoints, destination} = this.state
 
     return (
@@ -240,12 +252,13 @@ class Main extends Component {
           onMoveShouldSetResponder={this.onMapDrag}
           onMapReady={() => Haptic.notification(Haptic.NotificationTypes.Success)}
           // legalLabelInsets={pickingPassengers ? {bottom: (height * 0.4)} : null}
+          loadingEnabled={true}
           ref={c => this.mapView = c}
         >
           {waypoints.map((coordinate, index) =>
             <MapView.Marker key={`coordinate_${index}`} coordinate={coordinate} />
           )}
-          {savedContacts.map(({id, coordinate}) => (
+          {savedContacts.map(({id, coordinate, activePin}) => (
             <MapView.Marker key={id} coordinate={coordinate} pinColor={activePin ? 'red' : 'gray'} />
           ))}
           {go && (
@@ -306,6 +319,7 @@ class Main extends Component {
             contacts={savedContacts}
             hide={!pickingPassengers}
             highlightPassenger={this.highlightPassenger}
+            onPassengerSelect={this.onPassengerSelect}
           />
         </SafeAreaView>
       </View>
